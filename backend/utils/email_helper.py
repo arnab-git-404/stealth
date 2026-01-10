@@ -32,6 +32,6 @@ def send_activation_email(email: str, token: str):
         
 if __name__ == "__main__":
     # Test the email function
-    test_email = "carnagesoham49@gmail.com"
+    test_email = "abhishek20dgp@gmail.com"
     test_token = "sampletoken123"
     send_activation_email(test_email, test_token)
