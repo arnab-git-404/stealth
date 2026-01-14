@@ -72,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const data = await response.json();
+    // setUser(data.user); // this i will use when backend is ready
     setUser(data);
   };
 
