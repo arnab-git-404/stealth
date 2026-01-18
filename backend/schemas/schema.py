@@ -11,7 +11,6 @@ class Doctor(BaseModel):
     phoneNumber: str = Field(..., min_length=10, max_length=15)
     password: str = Field(..., min_length=8)
 
-
 class Patient(BaseModel):
     patientId: Optional[str] = None  
     name: str = Field(..., min_length=2)
