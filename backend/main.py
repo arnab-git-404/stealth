@@ -9,8 +9,10 @@ from api.refresh_token import router as refresh_token_router
 from api.login import router as login_router
 from api.logout import router as logout_router
 from api.patient_create import router as patient_create_router
+from api.patient_detail import router as patient_detail_router
 from api.patient_visits import router as patient_visits_router
-from api.visits import router as visits_router
+from api.patients_list import router as patients_list_router
+from api.visits_detail import router as visits_router
 
 load_dotenv()
 
@@ -33,7 +35,9 @@ app.include_router(logout_router, prefix="/api")
 app.include_router(update_profile_router, prefix="/api")
 app.include_router(refresh_token_router, prefix="/api")
 app.include_router(patient_create_router, prefix="/api")
+app.include_router(patient_detail_router, prefix="/api")
 app.include_router(patient_visits_router, prefix="/api")
+app.include_router(patients_list_router, prefix="/api")
 app.include_router(visits_router, prefix="/api")
 
 @app.get("/")

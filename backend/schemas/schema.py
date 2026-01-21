@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Dict, Literal, Optional
 
@@ -18,6 +19,17 @@ class Patient(BaseModel):
     gender: Literal["Male", "Female", "Other"]
     phone: str = Field(..., min_length=10, max_length=15)
     transcript: dict[str, str]
+
+class PatientResponse(BaseModel):
+    id: Optional[str] 
+    name: str
+    age: int
+    gender: str
+    phone: str
+
+    class Config:
+        populate_by_name = True
+        from_attributes = True
     
 class CompleteProfileRequest(BaseModel):
     doctor: Doctor
@@ -25,3 +37,9 @@ class CompleteProfileRequest(BaseModel):
 
 class VisitUpdate(BaseModel):
     transcript: Dict[str, str]
+
+class VisitResponse(BaseModel):
+    id: str
+    patientId: str
+    transcript: Dict[str, str]
+    date: datetime
