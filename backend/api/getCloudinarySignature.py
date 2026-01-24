@@ -15,8 +15,7 @@ def generate_signature():
 
     params = {
         "timestamp": timestamp,
-        "folder": "audio-recordings",
-        "resource_type": "video"
+        "upload_preset": "audio_signed_preset"
     }
 
     signature = cloudinary.utils.api_sign_request(
