@@ -12,6 +12,7 @@ import {
   Volume2,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import toast from "react-hot-toast";
 
 type RecordingStatus =
   | "idle"
@@ -23,6 +24,8 @@ type RecordingStatus =
   | "error";
 
 export default function RecordingConsultationCard() {
+  const SERVER_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [status, setStatus] = useState<RecordingStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [seconds, setSeconds] = useState(0);
@@ -64,13 +67,17 @@ export default function RecordingConsultationCard() {
           noiseSuppression: true,
           echoCancellation: true,
           autoGainControl: true,
+          channelCount: 1,
+          sampleRate: 44100,
         },
       });
 
       streamRef.current = stream;
 
       const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: "audio/webm",
+        // mimeType: "audio/webm",
+        mimeType: "audio/webm; codecs=opus",
+        audioBitsPerSecond: 128000, // 🔥 important
       });
 
       mediaRecorderRef.current = mediaRecorder;
@@ -146,6 +153,33 @@ export default function RecordingConsultationCard() {
   };
 
   /* ---------------- UPLOAD ---------------- */
+  // const finalizeAndUpload = async () => {
+  //   try {
+  //     setStatus("uploading");
+
+  //     const audioBlob = new Blob(audioChunksRef.current, {
+  //       type: "audio/webm",
+  //     });
+
+  //     const formData = new FormData();
+  //     formData.append("audio", audioBlob, "consultation.webm");
+
+  //     const res = await fetch("/api/transcribe", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (!res.ok) throw new Error("Upload failed");
+
+  //     setStatus("success");
+  //   } catch {
+  //     setError("Failed to upload or transcribe audio.");
+  //     setStatus("error");
+  //   }
+  // };
+  // ...existing code...
+
+  /* ---------------- UPLOAD ---------------- */
   const finalizeAndUpload = async () => {
     try {
       setStatus("uploading");
@@ -154,18 +188,61 @@ export default function RecordingConsultationCard() {
         type: "audio/webm",
       });
 
-      const formData = new FormData();
-      formData.append("audio", audioBlob, "consultation.webm");
-
-      const res = await fetch("/api/transcribe", {
-        method: "POST",
-        body: formData,
+      // Step 1: Get Cloudinary signature from backend
+      const signatureRes = await fetch(`${SERVER_URL}/cloudinary/signature`, {
+        method: "GET",
+        credentials: "include",
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!signatureRes.ok) throw new Error("Failed to get upload signature");
+
+      const { timestamp, signature, api_key, cloud_name } =
+        await signatureRes.json();
+
+      // Step 2: Upload to Cloudinary
+      const cloudinaryFormData = new FormData();
+      cloudinaryFormData.append("file", audioBlob, "consultation.webm");
+      cloudinaryFormData.append("timestamp", timestamp.toString());
+      cloudinaryFormData.append("upload_preset", "audio_signed_preset");
+      cloudinaryFormData.append("signature", signature);
+      cloudinaryFormData.append("api_key", api_key);
+
+      const cloudinaryRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloud_name}/video/upload`,
+        {
+          method: "POST",
+          body: cloudinaryFormData,
+        },
+      );
+
+      if (!cloudinaryRes.ok) throw new Error("Failed to upload to Cloudinary");
+
+      const cloudinaryData = await cloudinaryRes.json();
+      const audioUrl = cloudinaryData.secure_url;
+
+      // Step 3: Send audio URL with user details to backend for transcription
+      // const transcribeRes = await fetch("/api/transcribe", {
+        // method: "POST",
+        // headers: {
+          // "Content-Type": "application/json",
+        // },
+        // credentials: "include",
+        // body: JSON.stringify({
+          // audioUrl: audioUrl,
+          // Add user details here when available
+          // patientId: "...",
+          // patientName: "...",
+          // etc.
+        // }),
+      // });
+
+      // if (!transcribeRes.ok) throw new Error("Transcription failed");
 
       setStatus("success");
-    } catch {
+      toast.success("For Details, check Browser Network Tab." , {duration: 10000} );
+
+    } catch (error) {
+      console.error("Upload error:", error);
       setError("Failed to upload or transcribe audio.");
       setStatus("error");
     }
@@ -186,7 +263,7 @@ export default function RecordingConsultationCard() {
   /* ---------------- UI ---------------- */
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
+      <div className="w-full max-w-md rounded-2xl border shadow-xl">
         {/* Header */}
         <div className="flex items-center gap-3 border-b px-6 py-4">
           <span
