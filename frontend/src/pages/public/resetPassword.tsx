@@ -41,7 +41,7 @@ export default function AccountActivation() {
 
       try {
         // Replace with your actual API endpoint
-        const response = await fetch(`${SERVER_URL}/api/auth/validate-activation-token`, {
+        const response = await fetch(`${SERVER_URL}/auth/validate-reset-token`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token }),
@@ -82,7 +82,7 @@ export default function AccountActivation() {
 
     try {
       // Replace with your actual API endpoint
-      const response = await fetch(`${SERVER_URL}/api/auth/reset-password`, {
+      const response = await fetch(`${SERVER_URL}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password }),

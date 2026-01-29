@@ -4,6 +4,8 @@ import { Loader2, Mail, ArrowLeft, Hospital,Lock, ShieldCheck } from "lucide-rea
 import toast from "react-hot-toast";
 
 export default function ForgotPassword() {
+    const SERVER_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -14,7 +16,7 @@ export default function ForgotPassword() {
 
     try {
       // Replace with your actual API call
-      const response = await fetch("/api/auth/forgot-password", {
+      const response = await fetch(`${SERVER_URL}/auth/forgot-password`, {
     
           method: "POST",
           headers: {
