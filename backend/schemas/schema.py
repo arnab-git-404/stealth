@@ -19,6 +19,7 @@ class Patient(BaseModel):
     gender: Literal["Male", "Female", "Other"]
     phone: str = Field(..., min_length=10, max_length=15)
     transcript: dict[str, str]
+    doctorId: str = Field(..., min_length=2)
 
 class PatientResponse(BaseModel):
     id: Optional[str] 

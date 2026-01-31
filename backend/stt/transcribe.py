@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from io import BytesIO
 import requests
-from parse_transcription import parse_transcription_response
+# from parse_transcription import parse_transcription_response (enable while testing independently)
 from elevenlabs.client import ElevenLabs
 
 load_dotenv()
@@ -48,6 +48,7 @@ if __name__ == "__main__":
         num_speakers=2,
     )
 
-    full_text, sentence_segments = parse_transcription_response(result)
+    #full_text, sentence_segments = parse_transcription_response(result)
 
-    print(sentence_segments)
+    # print("Sentence Segments:\n", sentence_segments)
+    # print("\nFull Transcription:\n", full_text)

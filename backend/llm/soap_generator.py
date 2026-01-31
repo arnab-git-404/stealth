@@ -21,7 +21,7 @@ def generate_soap_note(conversation: list[dict]) -> dict:
         config=types.GenerateContentConfig(
                 system_instruction=SOAP_PROMPT
             ),
-            contents=[str[conversation]]
+            contents=[str(conversation)]
         )
         
 
