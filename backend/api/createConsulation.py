@@ -14,12 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 @router.post(
-    "/",
+    "/create-consultation",
     status_code=status.HTTP_201_CREATED,
     summary="Create patient and visit record",
     dependencies=[Depends(verify_csrf)],
 )
-def create_visit(
+def create_consultation(
     payload: Patient,
     user_email: str = Depends(get_current_user),
 ):
@@ -80,6 +80,8 @@ def create_visit(
             "message": "Patient and visit created successfully",
             "patientId": patient_id,
             "visitId": str(visit_id),
+            "patient": patient_doc if not existing_patient else existing_patient,
+            "visit": visit_doc,
         }
 
     except HTTPException:

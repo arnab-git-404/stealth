@@ -46,3 +46,7 @@ class VisitResponse(BaseModel):
     notes: list[str]
     transcription: list[str]
 
+class PatientWithVisitsResponse(BaseModel):
+    patient: PatientResponse
+    visits: list[VisitResponse]
+
