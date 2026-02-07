@@ -14,6 +14,10 @@ from api.getVisitsByVisitId import router as get_visits_by_visit_id_router
 from api.updateProfile import router as update_profile_router
 from api.cloudinary.getCloudinarySignature import router as generate_signature
 from api.cloudinary.deleteCloudinaryFile import router as delete_cloudinary_file_router
+from api.session.getAllSessions import router as get_all_sessions_router
+from api.session.logoutDeviceBySessionId import router as logout_device_by_session_id_router
+from api.session.logoutAllDeviceBYUserId import router as logout_all_device_router
+
 
 apiRouter = APIRouter()
 
@@ -88,7 +92,6 @@ apiRouter.include_router(
     prefix='/patients',
     tags=['patients']
 )
-
 apiRouter.include_router(
     get_visits_by_visit_id_router,
     prefix='/visits',
@@ -101,4 +104,19 @@ apiRouter.include_router(
 )
 
 
-
+# Session Api Routes
+apiRouter.include_router(
+    get_all_sessions_router,
+    prefix='/sessions',
+    tags=['sessions']
+)
+apiRouter.include_router(
+    logout_device_by_session_id_router,
+    prefix='/sessions',
+    tags=['sessions']
+)
+apiRouter.include_router(
+    logout_all_device_router,
+    prefix='/sessions',
+    tags=['sessions']
+)
