@@ -1,11 +1,13 @@
-from fastapi import APIRouter, HTTPException, status, Response
+from datetime import datetime
+from fastapi import APIRouter, HTTPException, Request, status, Response
 from schemas.auth import LoginRequest
-from db.mongo_client import doctors_collection
+from db.mongo_client import doctors_collection, sessions_collection
 from utils.security import verify_password
 from utils.jwt_helper import create_access_token, create_refresh_token,REFRESH_EXPIRE_DAYS
 import secrets 
 from dotenv import load_dotenv
 import os
+from utils.get_device_info import get_device_info
 
 load_dotenv()
 
@@ -18,7 +20,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     summary="Login user and issue JWT cookie",
 )
-def login(payload: LoginRequest, response: Response):
+async def login(payload: LoginRequest, request: Request ,response: Response):
     user = doctors_collection.find_one({"email": payload.email})
 
     if not user or not verify_password(payload.password, user["password_hash"]):
@@ -33,9 +35,25 @@ def login(payload: LoginRequest, response: Response):
             detail="Account not activated"
         )
 
+    deviceInfo = get_device_info(request)
+
+    print("Device Info:", deviceInfo)
+
     access_token = create_access_token(user["email"])
     refresh_token = create_refresh_token(user["email"])
     csrf_token = secrets.token_urlsafe(16)
+
+    sessions_collection.insert_one({
+        "user_id": user["_id"],
+        "refresh_token_hash": refresh_token,
+        "device": deviceInfo["device"],
+        "browser": deviceInfo["browser"],
+        "os": deviceInfo["os"],
+        "ip": request.client.host,
+        "revoked": False,
+        "created_at": datetime.now(),
+        "last_active": datetime.now(),
+    })
 
     # Access token
     response.set_cookie(
