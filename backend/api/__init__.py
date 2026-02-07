@@ -13,6 +13,7 @@ from api.patients.getVisitsByPatientId import router as get_visits_by_patient_id
 from api.getVisitsByVisitId import router as get_visits_by_visit_id_router
 from api.updateProfile import router as update_profile_router
 from api.cloudinary.getCloudinarySignature import router as generate_signature
+from api.cloudinary.deleteCloudinaryFile import router as delete_cloudinary_file_router
 
 apiRouter = APIRouter()
 
@@ -24,6 +25,11 @@ apiRouter.include_router(
 # Cloudinary Apis
 apiRouter.include_router(
     generate_signature,
+    prefix='/cloudinary',
+    tags=['Cloudinary']
+)
+apiRouter.include_router(
+    delete_cloudinary_file_router,
     prefix='/cloudinary',
     tags=['Cloudinary']
 )

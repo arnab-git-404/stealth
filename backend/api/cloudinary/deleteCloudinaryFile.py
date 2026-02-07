@@ -20,7 +20,7 @@ router = APIRouter()
 class DeleteByUrl(BaseModel):
     url: str
 
-@router.delete('/cloudinary/delete-by-url')
+@router.delete('/delete-by-url')
 async def delete_by_url(data: DeleteByUrl):
     """
     Delete a file from Cloudinary using the secure_url
