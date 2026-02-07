@@ -1,18 +1,18 @@
 from fastapi import FastAPI, APIRouter
-from api.signup import router as signup_router
-from api.activate import router as activate_router
+from api.auth.signup import router as signup_router
+from api.auth.activate import router as activate_router
 from api.completeProfile import router as complete_profile_router
 from api.updateProfile import router as update_profile_router
-from api.refreshToken import router as refresh_token_router
-from api.login import router as login_router
-from api.logout import router as logout_router
+from api.auth.refreshToken import router as refresh_token_router
+from api.auth.login import router as login_router
+from api.auth.logout import router as logout_router
 from api.createConsulation import router as create_consultation_router
-from api.getPatientByPatientId import router as patient_detail_router
-from api.getPatients import router as get_patients_router
-from api.getVisitsByPatientId import router as get_visits_by_patient_id_router
+from api.patients.getPatientByPatientId import router as patient_detail_router
+from api.patients.getPatients import router as get_patients_router
+from api.patients.getVisitsByPatientId import router as get_visits_by_patient_id_router
 from api.getVisitsByVisitId import router as get_visits_by_visit_id_router
 from api.updateProfile import router as update_profile_router
-from api.getCloudinarySignature import router as generate_signature
+from api.cloudinary.getCloudinarySignature import router as generate_signature
 
 apiRouter = APIRouter()
 
