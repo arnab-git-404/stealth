@@ -8,7 +8,7 @@ export default function App() {
     <>
       <ThemeProvider defaultTheme="system" storageKey="docuflow-theme">
         <Toaster position="top-right" />
-        <ReactLenis root />
+        {/* <ReactLenis root /> */}
         <AppRoutes />
       </ThemeProvider>
     </>

@@ -3,7 +3,7 @@ from db.mongo_client import patients_collection, visits_collection
 from schemas.schema import PatientWithVisitsResponse
 
 
-router = APIRouter(prefix="/patients", tags=["patients"])
+router = APIRouter()
 
 
 @router.get("/{patient_id}", response_model=PatientWithVisitsResponse)
