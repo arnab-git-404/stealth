@@ -129,7 +129,7 @@ export default function Registration() {
 
     try {
       // Replace with your actual API call
-      const response = await fetch(`${SERVER_URL}/api/auth/complete-profile`, {
+      const response = await fetch(`${SERVER_URL}/auth/complete-profile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
