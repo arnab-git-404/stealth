@@ -6,6 +6,7 @@ from schemas.schema import VisitResponse
 
 router = APIRouter(prefix="/visits", tags=["visits"])
 
+
 @router.get("/{visit_id}", response_model=VisitResponse)
 def get_visit(visit_id: str):
     try:
@@ -18,6 +19,10 @@ def get_visit(visit_id: str):
 
     visit["id"] = str(visit.pop("_id"))
 
-    return visit
-
-
+    return {
+        "id": visit["id"],
+        "patientId": visit.get("patientId"),
+        "date": visit.get("date"),
+        "notes": visit.get("notes", []),
+        "transcription": visit.get("transcription", [])
+    }
