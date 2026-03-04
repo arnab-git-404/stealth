@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from schemas.schema import Patient
+from schemas.schema import ConsultationRequest
 from db.mongo_client import patients_collection, visits_collection
 from utils.uniqueid import generate_patient_id
 from datetime import datetime, timezone
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
     dependencies=[Depends(verify_csrf)],
 )
 def create_consultation(
-    payload: Patient,
+    payload: ConsultationRequest,
     user_email: str = Depends(get_current_user),
 ):
     try:
@@ -41,6 +41,7 @@ def create_consultation(
                 "gender": payload.gender,
                 "phone": payload.phone,
                 "history": [],
+                "status": "review",
                 "created_at": datetime.now(timezone.utc),
             }
             patient_result = patients_collection.insert_one(patient_doc)

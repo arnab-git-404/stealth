@@ -22,17 +22,16 @@ def get_patient(patient_id: str):
         "phone": patient.get("phone"),
     }
 
-    visits_cursor = visits_collection.find({
-        "$or": [
-            {"patientId": patient_id},
-        ]
-    })
+    visits_cursor = visits_collection.find(
+        {"patientId": patient_id},
+        {"date": 1}   
+    )
 
-    visits = list(visits_cursor)
-
-    for v in visits:
-        v["id"] = str(v.pop("_id"))
+    visits = []
+    for v in visits_cursor:
+        visits.append({
+            "id": str(v["_id"]),
+            "date": v.get("date")
+        })
 
     return {"patient": patient_payload, "visits": visits}
-
-
